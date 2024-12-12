@@ -1,0 +1,283 @@
+{
+    "address": "DQepg8Eho5enJVdzr6fANVfKdqq5xH7kRKo1q33T3DJX",
+    "version": "0.1.0",
+    "name": "staking_program",
+    "instructions": [
+        {
+            "name": "initializeMaster",
+            "accounts": [
+                {
+                    "name": "masterContract",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "payer",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "owner",
+                    "type": "publicKey"
+                }
+            ]
+        },
+        {
+            "name": "createStakingContract",
+            "accounts": [
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "masterContract",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "stakingContract",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "poolName",
+                    "type": "string"
+                },
+                {
+                    "name": "tokenMint",
+                    "type": "publicKey"
+                }
+            ]
+        },
+        {
+            "name": "stake",
+            "accounts": [
+                {
+                    "name": "stakingContract",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "user",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "stakingTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "unstake",
+            "accounts": [
+                {
+                    "name": "stakingContract",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "user",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "stakingTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "modifyPoolParameters",
+            "accounts": [
+                {
+                    "name": "stakingContract",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                }
+            ],
+            "args": [
+                {
+                    "name": "newApr",
+                    "type": "u64"
+                },
+                {
+                    "name": "newLocktime",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "claimReward",
+            "accounts": [
+                {
+                    "name": "stakingContract",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "user",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "userTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "stakingTokenAccount",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        }
+    ],
+    "accounts": [
+        {
+            "name": "MasterContract",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "poolCount",
+                        "type": "u64"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "StakingContract",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "poolName",
+                        "type": "string"
+                    },
+                    {
+                        "name": "totalStaked",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "apr",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "locktime",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "tokenMint",
+                        "type": "publicKey"
+                    }
+                ]
+            }
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "Unauthorized",
+            "msg": "Unauthorized: Only the contract owner can perform this action."
+        },
+        {
+            "code": 6001,
+            "name": "InsufficientFunds",
+            "msg": "Insufficient Funds: The user does not have enough tokens to stake or unstake."
+        },
+        {
+            "code": 6002,
+            "name": "InvalidToken",
+            "msg": "Invalid Token: The provided token is not valid for this staking pool."
+        },
+        {
+            "code": 6003,
+            "name": "StakingPeriodNotReached",
+            "msg": "Staking Period Not Reached: The staking lock period has not been completed yet."
+        },
+        {
+            "code": 6004,
+            "name": "InvalidAmount",
+            "msg": "Invalid Amount: The amount provided for staking or unstaking is invalid."
+        },
+        {
+            "code": 6005,
+            "name": "InvalidPoolParameters",
+            "msg": "Invalid APR or Locktime: The provided APR or locktime values are not valid."
+        },
+        {
+            "code": 6006,
+            "name": "NoRewards",
+            "msg": "No Rewards Available: The user has no rewards to claim."
+        }
+    ]
+}
