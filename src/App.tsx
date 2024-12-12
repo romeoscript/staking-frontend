@@ -2,8 +2,8 @@ import { Buffer } from 'buffer';
 
 window.Buffer = Buffer;
 
-import React, { useState, useEffect } from "react";
-import { useAnchorWallet, useWallet } from "@solana/wallet-adapter-react";
+import  { useState } from "react";
+import {  useWallet } from "@solana/wallet-adapter-react";
 import { Program, AnchorProvider, BN, web3 } from "@project-serum/anchor";
 import {
   PublicKey,
@@ -13,7 +13,7 @@ import {
   Commitment,
   Transaction,
   LAMPORTS_PER_SOL,
-  clusterApiUrl,
+  // clusterApiUrl,
 } from "@solana/web3.js";
 import {
   WalletMultiButton,
@@ -22,20 +22,20 @@ import {
 import idlData from "./idl.json"; // Import the IDL
 import { Idl } from "@project-serum/anchor";
 import {
-  TOKEN_2022_PROGRAM_ID,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
-  AccountLayout,
+  // TOKEN_2022_PROGRAM_ID,
+  // ASSOCIATED_TOKEN_PROGRAM_ID,
+  // AccountLayout,
   TOKEN_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
   getAssociatedTokenAddress,
-  getOrCreateAssociatedTokenAccount,
-  createMint,
-  mintTo,
-  transfer,
+  // getOrCreateAssociatedTokenAccount,
+  // createMint,
+  // mintTo,
+  // transfer,
 } from "@solana/spl-token";
 // import { Token } from '@solana/spl-token';
-import iddl from "../../target/idl/staking_contract.json";
-import type { StakingContract } from "../../target/types/staking_contract";
+// import iddl from "../../target/idl/staking_contract.json";
+// import type { StakingContract } from "../../target/types/staking_contract";
 
 // Constants
 const idl = idlData as unknown as Idl;
@@ -57,7 +57,7 @@ const App = () => {
   const [error, setError] = useState<string | null>(null);
   // const [error, setError] = useState<string>("");
   const [message, setMessage] = useState<string>("");
-  const [tokenBalance, setTokenBalance] = useState(0);
+  const [tokenBalance, _] = useState(0);
   const [masterContract, setMasterContract] = useState<string | null>(null);
   const [stakingContract, setStakingContract] = useState<string | null>(null);
   const [poolName, setPoolName] = useState<string>("");
@@ -70,7 +70,7 @@ const App = () => {
 
   const wallet = useWallet();
 
-  const { publicKey, connected, signTransaction } = wallet;
+  const { publicKey } = wallet;
 
   const program = new Program(idl, programID, getProvider(wallet));
 
@@ -181,108 +181,7 @@ const App = () => {
     }
   };
 
-  // (async () => {
-
-  //   const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
-
-  //   const tokenAccounts = await connection.getTokenAccountsByOwner(
-  //     new PublicKey('25mwXtqvNTnQd9Xx9SdypyNv8DZR2bwGgzSnSPKVWstq'),
-  //     {
-  //       programId: TOKEN_PROGRAM_ID,
-  //     }
-  //   );
-
-  //   console.log("Token                                         Balance");
-  //   console.log("------------------------------------------------------------");
-  //   tokenAccounts.value.forEach((tokenAccount) => {
-  //     const accountData = AccountLayout.decode(tokenAccount.account.data);
-  //     console.log(`${new PublicKey(accountData.mint)}   ${accountData.amount}`);
-  //   })
-
-  // })();
-
-  //   (async () => {
-  //     // Connect to cluster
-  //     const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
-
-  //     // Generate a new wallet keypair and airdrop SOL
-  //     const fromWallet = Keypair.generate();
-  //     // const fromAirdropSignature = await connection.requestAirdrop(fromWallet.publicKey, LAMPORTS_PER_SOL);
-
-  //     // Wait for airdrop confirmation
-  //     // await connection.confirmTransaction(fromAirdropSignature);
-
-  //     // Generate a new wallet to receive newly minted token
-  //     const toWallet = Keypair.generate();
-
-  //     // Create new token mint
-  //     const mint = await createMint(connection, fromWallet, fromWallet.publicKey, null, 9);
-
-  //     // Get the token account of the fromWallet address, and if it does not exist, create it
-  //     const fromTokenAccount = await getOrCreateAssociatedTokenAccount(
-  //         connection,
-  //         fromWallet,
-  //         mint,
-  //         fromWallet.publicKey
-  //     );
-
-  //     // Get the token account of the toWallet address, and if it does not exist, create it
-  //     const toTokenAccount = await getOrCreateAssociatedTokenAccount(connection, fromWallet, mint, toWallet.publicKey);
-
-  //     // Mint 1 new token to the "fromTokenAccount" account we just created
-  //     let signature = await mintTo(
-  //         connection,
-  //         fromWallet,
-  //         mint,
-  //         fromTokenAccount.address,
-  //         fromWallet.publicKey,
-  //         1000000000
-  //     );
-  //     console.log('mint tx:', signature);
-
-  //     // Transfer the new token to the "toTokenAccount" we just created
-  //     signature = await transfer(
-  //         connection,
-  //         fromWallet,
-  //         fromTokenAccount.address,
-  //         toTokenAccount.address,
-  //         fromWallet.publicKey,
-  //         50
-  //     );
-  // })();
-
-  // (async () => {
-  //   // setLoading(true);
-  //   try {
-  //     if (publicKey && connection) {
-  //       const publicKeys = new PublicKey(publicKey);
-  //       const senderAssociatedTokenAccount = await getAssociatedTokenAddress(
-  //         new PublicKey("3hA3XL7h84N1beFWt3gwSRCDAf5kwZu81Mf1cpUHKzce"),
-  //         publicKeys,
-  //         false,
-  //         TOKEN_PROGRAM_ID,
-  //         ASSOCIATED_TOKEN_PROGRAM_ID,
-  //       );
-  //       const tokenAccountInfo = await connection.getAccountInfo(senderAssociatedTokenAccount);
-  //       if (tokenAccountInfo) {
-  //         const tokenAccountData = AccountLayout.decode(tokenAccountInfo.data);
-  //         const balance = Number(tokenAccountData.amount) / 10 ** 9;
-  //         setTokenBalance(balance);
-  //       } else {
-  //         setTokenBalance(0);
-  //       }
-  //     }
-  //     setError(null);
-  //   } catch (error) {
-  //     if (error instanceof Error) {
-  //       setError('Error fetching BARK token balance: ' + error.message);
-  //     } else {
-  //       setError('An unknown error occurred.');
-  //     }
-  //   }
-  // })();
-
-  // Create Staking Contract
+ 
   const createStakingContract = async (tokenMint: web3.PublicKeyInitData) => {
     setError("");
     setMessage("");
@@ -348,18 +247,7 @@ const App = () => {
     }
 
     const stakingContractPubkey = new PublicKey(stakingContract);
-    // Fetch the staking contract details to get the correct token mint
-    // let stakingContractDetails;
-    // try {
-    //   stakingContractDetails = await program.account.stakingContract.fetch(stakingContractPubkey); }
-    // catch (err)
-    // {
-    //   console.error("Error fetching staking contract details:", err);
-    //   setError("Error fetching staking contract details."); return;
-    // }
-    // const tokenMintAddress = stakingContractDetails.tokenMint;
 
-    // Get user token account
     let userTokenAccount;
     try {
       userTokenAccount = await getAssociatedTokenAddress(
@@ -448,32 +336,6 @@ const App = () => {
     } else {
       console.log(associatedTokenAccountInfo);
     }
-
-    //   const userTokenAccountInfo = await provider.connection.getParsedAccountInfo(
-    //     userTokenAccount
-    //   );
-    //   // console.log("User Token Account Info:", userTokenAccountInfo);
-    //   const stakingContractDetails = await program.account.stakingContract.fetch(
-    //     stakingContractPubkey
-    //   );
-    //   const expectedTokenMint = stakingContractDetails?.tokenMint?.toString();
-    // console.log("Expected Token Mint Address:", expectedTokenMint);
-
-    //   const stakingContractDetailss = await program.account.stakingContract.fetch(stakingContractPubkey);
-    // const tokenMintAddresss = stakingContractDetailss.tokenMint.toString();
-    // console.log("Expected token mint address:", tokenMintAddresss);
-    // const userTokenMint = userTokenAccountInfo.value?.data?.parsed?.info?.mint;
-    // console.log("User Token Mint Address:", userTokenMint);
-    //   console.log(userTokenAccount.toString(), stakingTokenAccount.toString())
-    //   console.log("Stake Parameters:", {
-    //     stakingContract: stakingContractPubkey.toString(),
-    //     user: provider.wallet.publicKey.toString(),
-    //     userTokenAccount: userTokenAccount.toString(),
-    //     stakingTokenAccount: stakingTokenAccount.toString(),
-    //     tokenProgram: TOKEN_PROGRAM_ID.toString(),
-    //   });
-
-    // Proceed to stake
     try {
       await program.rpc.stake(new BN(stakeAmount), {
         accounts: {
@@ -502,15 +364,7 @@ const App = () => {
 
     const provider = getProvider(wallet);
     try {
-      // Derive the correct userBalance PDA
-      // const [userBalance, bump] = await PublicKey.findProgramAddress(
-      //   [
-      //     Buffer.from("user_balance"),
-      //     provider.wallet.publicKey.toBuffer(),
-      //     new PublicKey(stakingContract).toBuffer(),
-      //   ],
-      //   program.programId
-      // );
+     
 
       let userTokenAccount;
       try {
@@ -674,19 +528,3 @@ const App = () => {
 };
 
 export default App;
-
-// import React from 'react';
-// import WalletConnect from './WalletConnect';
-// import Staking from './Staking';
-
-// const App: React.FC = () => {
-//   return (
-//     <div className="App">
-//       <h1>Solana Staking Dapp</h1>
-//       <WalletConnect />
-//       <Staking />
-//     </div>
-//   );
-// };
-
-// export default App;
