@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Connection, PublicKey } from '@solana/web3.js';
+import React from 'react';
+// import { Connection, PublicKey } from '@solana/web3.js';
 import { useWallet } from '@solana/wallet-adapter-react';
 
 const WalletConnect: React.FC = () => {
-  const { wallet, connect, disconnect, connected, publicKey } = useWallet();
+  const {  connect, disconnect, connected, publicKey } = useWallet();
   
   return (
     <div>
